@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { requests, user } from "@/db/schema";
+import { feedback, requests, user } from "@/db/schema";
 import { eq, aliasedTable } from "drizzle-orm";
 import { getAuthenticatedUser } from "@/action/get-authenticated-user";
 import db from "@/db";
@@ -34,10 +34,12 @@ export async function GET(req: Request, { params }: Params) {
 				request: requests,
 				user: customerTable,
 				collector: collectorTable,
+				feedback: feedback,
 			})
 			.from(requests)
 			.leftJoin(customerTable, eq(requests.user_id, customerTable.id))
 			.leftJoin(collectorTable, eq(requests.collector_id, collectorTable.id))
+			.leftJoin(feedback, eq(feedback.request_id, requestId))
 			.where(eq(requests.id, requestId))
 			.limit(1);
 
@@ -68,6 +70,13 @@ export async function GET(req: Request, { params }: Params) {
 							id: result.collector.id,
 							name: result.collector.name,
 							email: result.collector.email,
+					  }
+					: null,
+				feedback: result.feedback
+					? {
+							id: result.feedback.id,
+							rating: result.feedback.rating,
+							comment: result.feedback.comment,
 					  }
 					: null,
 			},

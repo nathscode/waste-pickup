@@ -1,5 +1,7 @@
 "use client";
 
+import { FeedbackDialog } from "@/components/feedback-dialog";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { fetcher } from "@/lib/api";
 import { formatDateTime, getStatusColor, getStatusLabel } from "@/lib/utils";
@@ -7,12 +9,14 @@ import { useQuery } from "@tanstack/react-query";
 import {
 	AlertTriangle,
 	ArrowLeft,
+	Bubbles,
 	Clock,
 	FileText,
 	Loader2,
 	Mail,
 	MapPin,
 	Phone,
+	Star,
 	User,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -38,9 +42,14 @@ type RequestData = {
 		phone: string | null;
 	};
 	collector: {
-		id: number;
+		id: string;
 		name: string;
 		email: string;
+	} | null;
+	feedback: {
+		id: string;
+		rating: number;
+		comment: string;
 	} | null;
 };
 
@@ -97,6 +106,8 @@ export default function RequestDetailPage({ params }: Props) {
 	const request: RequestData = data?.request;
 	const requestUser = request.user;
 	const collector = request.collector;
+	const feedback = request.feedback;
+	const showRating = request.status === "completed" && !feedback?.id;
 
 	return (
 		<div className="min-h-screen bg-slate-50 px-4 py-12 sm:px-6 lg:px-8">
@@ -164,6 +175,23 @@ export default function RequestDetailPage({ params }: Props) {
 									</div>
 								)}
 							</div>
+							{showRating && (
+								<div className="mt-8 border-t border-slate-100 pt-6">
+									<div className="rounded-xl bg-emerald-50 p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+										<div>
+											<h3 className="font-bold text-emerald-900">
+												Job Completed
+											</h3>
+											<p className="text-sm text-emerald-700">
+												The collector has marked this request as done.
+											</p>
+										</div>
+										<div className="w-full sm:w-auto">
+											<FeedbackDialog requestId={request.id} />
+										</div>
+									</div>
+								</div>
+							)}
 						</div>
 
 						{/* Notes Card */}
@@ -177,6 +205,23 @@ export default function RequestDetailPage({ params }: Props) {
 								</div>
 								<div className="rounded-xl bg-slate-50 p-4 text-slate-700 italic border border-slate-100">
 									"{request.notes}"
+								</div>
+							</div>
+						)}
+						{feedback?.id && (
+							<div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+								<div className="mb-4 flex items-center gap-3">
+									<Mail className="h-5 w-5 text-slate-400" />
+									<h3 className="text-lg font-bold text-slate-900">Feedback</h3>
+								</div>
+								<div className="rounded-xl bg-slate-50 p-4 text-slate-700  border border-slate-100">
+									<div className="flex flex-col gap-2">
+										<span className="inline-flex justify-center items-center w-fit bg-orange-500! text-orange-100! px-2 rounded-sm gap-1 font-semibold">
+											<Star className="size-4 fill-orange-100" />
+											{feedback.rating}
+										</span>
+										<span>{feedback.comment}</span>
+									</div>
 								</div>
 							</div>
 						)}

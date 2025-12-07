@@ -13,6 +13,8 @@ import {
 	User,
 	ShieldCheck,
 	Loader2,
+	Mail,
+	Star,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -153,6 +155,25 @@ export default function AdminRequestDetailPage({ params }: Props) {
 											Customer Notes:
 										</p>
 										<p className="text-slate-700 italic">"{request.notes}"</p>
+									</div>
+								)}
+								{request.feedback?.id && (
+									<div className="flex flex-col w-full">
+										<div className="mb-4 flex items-center gap-3">
+											<Mail className="h-5 w-5 text-slate-400" />
+											<h3 className="text-lg font-bold text-slate-900">
+												Feedback
+											</h3>
+										</div>
+										<div className="rounded-xl bg-slate-50 p-4 text-slate-700  border border-slate-100">
+											<div className="flex flex-col gap-2">
+												<span className="inline-flex justify-center items-center w-fit bg-orange-500! text-orange-100! px-2 rounded-sm gap-1 font-semibold">
+													<Star className="size-4 fill-orange-100" />
+													{request.feedback.rating}
+												</span>
+												<span>{request.feedback.comment}</span>
+											</div>
+										</div>
 									</div>
 								)}
 							</div>

@@ -124,6 +124,16 @@ export default function Header({ user }: HeaderProps) {
 											All Requests
 										</Link>
 										<Link
+											href="/admin/feedback"
+											className={`px-3 py-2 rounded-md text-sm font-medium ${
+												pathname === "/admin/feedback"
+													? "bg-primary-50 text-primary-600"
+													: "text-gray-700 hover:bg-gray-100"
+											}`}
+										>
+											All Feedbacks
+										</Link>
+										<Link
 											href="/admin/collectors"
 											className={`px-3 py-2 rounded-md text-sm font-medium ${
 												pathname === "/admin/collectors"
