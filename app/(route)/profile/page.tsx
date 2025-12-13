@@ -40,7 +40,6 @@ export default function ProfilePage() {
 		address: "",
 	});
 
-	// Fetch user profile
 	useState(() => {
 		fetchProfile();
 	});
@@ -96,7 +95,6 @@ export default function ProfilePage() {
 		}
 	}
 
-	// Handle account deletion
 	async function handleDeleteAccount() {
 		setDeleting(true);
 		setError("");
@@ -107,7 +105,6 @@ export default function ProfilePage() {
 			});
 
 			if (res.ok) {
-				// Redirect to login after successful deletion
 				router.push("/login");
 			} else {
 				const data = await res.json();
