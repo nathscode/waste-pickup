@@ -7,6 +7,8 @@ import db from "@/db";
 import RequestCard from "@/components/cards/request-card";
 import { Plus, Inbox } from "lucide-react";
 
+export const dynamic = "force-dynamic";
+
 export default async function DashboardPage() {
 	const session = await getAuthenticatedUser();
 
@@ -20,8 +22,9 @@ export default async function DashboardPage() {
 			collector: user,
 		})
 		.from(requests)
-		.leftJoin(user, eq(requests.collector_id, session.user.id))
-		.where(eq(requests.user_id, session?.user.id))
+		// Fix: Join on collector ID table match, not session ID match
+		.leftJoin(user, eq(requests.collector_id, user.id))
+		.where(eq(requests.user_id, session.user.id))
 		.orderBy(desc(requests.created_at));
 
 	const formattedRequests = userRequests.map(({ request, collector }) => ({
