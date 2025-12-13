@@ -22,7 +22,6 @@ export default async function DashboardPage() {
 			collector: user,
 		})
 		.from(requests)
-		// Fix: Join on collector ID table match, not session ID match
 		.leftJoin(user, eq(requests.collector_id, user.id))
 		.where(eq(requests.user_id, session.user.id))
 		.orderBy(desc(requests.created_at));
